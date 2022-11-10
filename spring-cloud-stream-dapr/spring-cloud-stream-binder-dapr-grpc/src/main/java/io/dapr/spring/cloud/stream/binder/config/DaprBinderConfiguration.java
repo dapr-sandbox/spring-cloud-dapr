@@ -70,9 +70,7 @@ public class DaprBinderConfiguration {
 	public DaprClient daprClient(DaprBinderConfigurationProperties properties) {
 
 		// switch procotol to GRPC
-		System.getProperties().setProperty(Properties.API_PROTOCOL.getName(), DaprApiProtocol.GRPC.name());
-		System.getProperties().setProperty(Properties.API_METHOD_INVOCATION_PROTOCOL.getName(),
-				DaprApiProtocol.GRPC.name());
+		properties.switchToGRPC();
 				
 		// build grpc client
 		DaprClient client = new DaprClientBuilder()

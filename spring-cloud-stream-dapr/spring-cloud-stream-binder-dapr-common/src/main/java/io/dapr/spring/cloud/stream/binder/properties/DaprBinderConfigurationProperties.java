@@ -14,6 +14,8 @@
 package io.dapr.spring.cloud.stream.binder.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import io.dapr.config.Properties;
+import io.dapr.client.DaprApiProtocol;
 
 /**
  * Configuration properties for the Dapr binder.
@@ -22,43 +24,43 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * <b>spring.cloud.stream.dapr.binder</b>.
  */
 @ConfigurationProperties(prefix = "spring.cloud.stream.dapr.binder")
-public class DaprBinderConfigurationProperties {
-	/**
-	 * Dapr's sidecar address.
-	 */
-	private String address = "127.0.0.1";
-
-	/**
-	 * Dapr's HTTP port.
-	 */
-	private int httpPort = 3501;
-
-	/**
-	 * Dapr's gRPC port.
-	 */
-	private int grpcPort = 50001;
-
+public class DaprBinderConfigurationProperties extends Properties {
 	public String getAddress() {
-		return address;
+		return SIDECAR_IP.get();
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		System.getProperties().setProperty(SIDECAR_IP.getName(), address);
 	}
 
 	public int getHttpPort() {
-		return httpPort;
+		return HTTP_PORT.get();
 	}
 
 	public void setHttpPort(int httpPort) {
-		this.httpPort = httpPort;
+		System.getProperties().setProperty(HTTP_PORT.getName(), String.valueOf(httpPort));
 	}
 
 	public int getGrpcPort() {
-		return grpcPort;
+		return GRPC_PORT.get();
 	}
 
 	public void setGrpcPort(int grpcPort) {
-		this.grpcPort = grpcPort;
+		System.getProperties().setProperty(GRPC_PORT.getName(), String.valueOf(grpcPort));
 	}
+
+	public void switchToGRPC() {
+		System.getProperties().setProperty(Properties.API_PROTOCOL.getName(), DaprApiProtocol.GRPC.name());
+		System.getProperties().setProperty(
+				Properties.API_METHOD_INVOCATION_PROTOCOL.getName(),
+				DaprApiProtocol.GRPC.name());
+	}
+
+	public void switchToHTTP() {
+		System.getProperties().setProperty(Properties.API_PROTOCOL.getName(), DaprApiProtocol.HTTP.name());
+		System.getProperties().setProperty(
+				Properties.API_METHOD_INVOCATION_PROTOCOL.getName(),
+				DaprApiProtocol.HTTP.name());
+	}
+
 }

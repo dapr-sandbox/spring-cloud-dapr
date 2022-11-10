@@ -15,5 +15,9 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-stream</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.dapr</groupId>
+			<artifactId>dapr-sdk</artifactId>
+		</dependency>
 	</dependencies>
 </project>
