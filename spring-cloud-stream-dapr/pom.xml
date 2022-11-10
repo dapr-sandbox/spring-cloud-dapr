@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
     <groupId>io.dapr.spring</groupId>
 	<artifactId>spring-cloud-stream-dapr-parent</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>io.dapr.spring</groupId>
 		<artifactId>spring-cloud-dapr-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
