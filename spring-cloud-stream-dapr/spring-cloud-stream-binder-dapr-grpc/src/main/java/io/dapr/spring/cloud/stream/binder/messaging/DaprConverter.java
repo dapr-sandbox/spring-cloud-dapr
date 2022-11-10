@@ -38,7 +38,7 @@ public interface DaprConverter<I, O> {
 	 *         perform the conversion.
 	 */
 	@Nullable
-	I fromMessage(Message<?> message) throws JsonProcessingException;
+	I fromMessage(Message<?> message, String pubsubName, String topic) throws JsonProcessingException;
 
 	/**
 	 * Create a {@link Message} whose payload is the result of converting the given

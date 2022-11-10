@@ -80,7 +80,7 @@ public class DaprMessageChannelBinder extends
             throws Exception {
         DaprProducerProperties extension = producerProperties.getExtension();
         DaprMessageHandler daprMessageHandler = new DaprMessageHandler(
-                destination.getName(), extension.getPubsubName(), daprClient);
+                daprMessageConverter, destination.getName(), extension.getPubsubName(), daprClient);
         daprMessageHandler.setBeanFactory(getBeanFactory());
         return daprMessageHandler;
     }

@@ -21,10 +21,11 @@ import org.springframework.util.Assert;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.domain.PublishEventRequest;
+import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 
 public class DaprMessageHandler extends AbstractMessageProducingHandler {
 	private static Logger logger = LoggerFactory.getLogger(DaprMessageHandler.class);
-
+    private final DaprMessageConverter daprMessageConverter;
 	private final String topic;
 	private final String pubsubName;
     private final DaprClient daprClient;
@@ -35,17 +36,18 @@ public class DaprMessageHandler extends AbstractMessageProducingHandler {
     * @param topic the topic
     * @param pubsubName the pubsub name
     */
-   public DaprMessageHandler(String topic, String pubsubName, DaprClient daprClient) {
+   public DaprMessageHandler(DaprMessageConverter daprMessageConverter,String topic, String pubsubName, DaprClient daprClient) {
        Assert.hasText(topic, "topic can't be null or empty");
        Assert.hasText(pubsubName, "pubsubName can't be null or empty");
        this.topic = topic;
        this.pubsubName = pubsubName;
        this.daprClient = daprClient;
+       this.daprMessageConverter = daprMessageConverter;
    }
 
     @Override
     protected void handleMessageInternal(Message<?> message) {
-        PublishEventRequest request = new PublishEventRequest(pubsubName, topic, message);
+        PublishEventRequest request = daprMessageConverter.fromMessage(message,pubsubName,topic);
         this.daprClient.publishEvent(request).block();
         logger.info("succeed to send event " + message + "to " + pubsubName + "/"  +  topic);
     }
