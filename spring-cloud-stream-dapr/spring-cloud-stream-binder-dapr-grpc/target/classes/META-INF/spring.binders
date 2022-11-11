@@ -1,2 +1,0 @@
-dapr:\
-io.dapr.spring.cloud.stream.binder.config.DaprBinderConfiguration

@@ -1,3 +1,0 @@
-# AutoConfiguration
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.dapr.spring.cloud.stream.binder.config.DaprGrpcServerAutoConfiguration
