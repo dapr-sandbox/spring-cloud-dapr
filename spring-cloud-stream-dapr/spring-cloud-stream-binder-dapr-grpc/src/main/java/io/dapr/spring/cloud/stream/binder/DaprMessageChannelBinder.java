@@ -31,6 +31,10 @@ import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperti
 import io.dapr.spring.cloud.stream.binder.properties.DaprProducerProperties;
 import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
 
+/**
+ * A {@link io.dapr.spring.cloud.stream.binder} that uses Dapr sidecar as the
+ * underlying middleware.
+ */
 public class DaprMessageChannelBinder extends
         AbstractMessageChannelBinder<ExtendedConsumerProperties<DaprConsumerProperties>, ExtendedProducerProperties<DaprProducerProperties>, DaprBinderProvisioner>
         implements

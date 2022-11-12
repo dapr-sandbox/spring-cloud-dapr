@@ -13,6 +13,9 @@
 
 package io.dapr.spring.cloud.stream.binder.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.stream.binder.Binder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,13 +27,6 @@ import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.spring.cloud.stream.binder.properties.DaprBinderConfigurationProperties;
 import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperties;
 import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.stream.binder.Binder;
-
-import io.dapr.config.Properties;
-import io.dapr.client.DaprApiProtocol;
 
 /**
  * Dapr binder's Spring Boot AutoConfiguration.

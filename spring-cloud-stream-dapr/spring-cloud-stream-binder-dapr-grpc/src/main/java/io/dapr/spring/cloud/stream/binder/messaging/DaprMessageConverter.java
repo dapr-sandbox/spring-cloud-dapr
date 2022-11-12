@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.domain.PublishEventRequest;
 import io.dapr.v1.DaprAppCallbackProtos;
 
+/**
+ * Implement of DaprConverter.@see {@link DaprConverter}.
+ */
 public class DaprMessageConverter
 		implements DaprConverter<PublishEventRequest, DaprAppCallbackProtos.TopicEventRequest> {
 

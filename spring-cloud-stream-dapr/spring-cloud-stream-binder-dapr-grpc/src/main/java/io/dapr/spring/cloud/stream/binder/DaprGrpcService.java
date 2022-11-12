@@ -23,24 +23,26 @@ import io.dapr.v1.DaprAppCallbackProtos;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+/**
+ * Class that encapsulates all client-side logic for Grpc.
+ */
 @GrpcService
 public class DaprGrpcService extends AppCallbackGrpc.AppCallbackImplBase {
 	private final List<DaprAppCallbackProtos.TopicSubscription> topicSubscriptionList = new ArrayList<>();
 	private final List<Consumer<DaprAppCallbackProtos.TopicEventRequest>> consumers = new ArrayList<>();
+
 	@Override
 	public void listTopicSubscriptions(Empty request,
 			StreamObserver<DaprAppCallbackProtos.ListTopicSubscriptionsResponse> responseObserver) {
 		try {
-			DaprAppCallbackProtos.ListTopicSubscriptionsResponse.Builder builder =
-					DaprAppCallbackProtos.ListTopicSubscriptionsResponse.newBuilder();
+			DaprAppCallbackProtos.ListTopicSubscriptionsResponse.Builder builder = DaprAppCallbackProtos.ListTopicSubscriptionsResponse
+					.newBuilder();
 			topicSubscriptionList.forEach(builder::addSubscriptions);
 			DaprAppCallbackProtos.ListTopicSubscriptionsResponse response = builder.build();
 			responseObserver.onNext(response);
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			responseObserver.onError(e);
-		}
-		finally {
+		} finally {
 			responseObserver.onCompleted();
 		}
 	}
@@ -50,19 +52,18 @@ public class DaprGrpcService extends AppCallbackGrpc.AppCallbackImplBase {
 			StreamObserver<DaprAppCallbackProtos.TopicEventResponse> responseObserver) {
 		try {
 			consumers.forEach(consumer -> consumer.accept(request));
-			DaprAppCallbackProtos.TopicEventResponse response =
-					DaprAppCallbackProtos.TopicEventResponse.newBuilder()
-							.setStatus(DaprAppCallbackProtos.TopicEventResponse.TopicEventResponseStatus.SUCCESS)
-							.build();
+			DaprAppCallbackProtos.TopicEventResponse response = DaprAppCallbackProtos.TopicEventResponse.newBuilder()
+					.setStatus(DaprAppCallbackProtos.TopicEventResponse.TopicEventResponseStatus.SUCCESS)
+					.build();
 			responseObserver.onNext(response);
 			responseObserver.onCompleted();
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			responseObserver.onError(e);
 		}
 	}
 
-	public void registerConsumer(String pubsubName, String topic, Consumer<DaprAppCallbackProtos.TopicEventRequest> consumer) {
+	public void registerConsumer(String pubsubName, String topic,
+			Consumer<DaprAppCallbackProtos.TopicEventRequest> consumer) {
 		topicSubscriptionList.add(DaprAppCallbackProtos.TopicSubscription
 				.newBuilder()
 				.setPubsubName(pubsubName)

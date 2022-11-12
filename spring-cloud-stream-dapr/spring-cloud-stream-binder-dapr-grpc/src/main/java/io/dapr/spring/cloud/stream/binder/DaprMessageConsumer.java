@@ -17,6 +17,9 @@ import java.util.function.Consumer;
 
 import io.dapr.v1.DaprAppCallbackProtos;
 
+/**
+ * Class that deals with messages in the way of Consumer method in main application. 
+ */
 public class DaprMessageConsumer implements Consumer<DaprAppCallbackProtos.TopicEventRequest> {
 	private final String topic;
 	private final String pubsubName;

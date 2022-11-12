@@ -19,6 +19,9 @@ import org.springframework.messaging.Message;
 import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.v1.DaprAppCallbackProtos;
 
+/**
+ * Class that deals with messages from TopicEvent in DaprGrpcService.
+ */
 public class DaprMessageProducer extends MessageProducerSupport {
 	private final DaprGrpcService daprGrpcService;
 	private final DaprMessageConverter daprMessageConverter;

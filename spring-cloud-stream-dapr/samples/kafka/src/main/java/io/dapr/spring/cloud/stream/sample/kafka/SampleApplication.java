@@ -25,6 +25,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 
+/**
+ * The {@link SampleApplication} is main Application to run. Implement publish
+ * and subscribe to message broker.
+ */
 @SpringBootApplication
 public class SampleApplication {
 	private static Logger logger = LoggerFactory.getLogger(SampleApplication.class);
@@ -35,6 +39,10 @@ public class SampleApplication {
 
 	private int i = 0;
 
+	/**
+	 * Generate messages for publish. 
+	 * @return A method returning Message<T> to publish.
+	 */
 	@Bean
 	public Supplier<Message<String>> supply() {
 		return () -> {
@@ -43,6 +51,9 @@ public class SampleApplication {
 		};
 	}
 
+	/**
+	 * Method to deal with suscribed messages.
+	 */
 	@Bean
 	public Consumer<Message<String>> consume() {
 		return message -> {

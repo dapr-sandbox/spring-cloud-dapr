@@ -13,6 +13,9 @@
 
 package io.dapr.spring.cloud.stream.binder.properties;
 
+/**
+ * Consumer specific binding properties.
+ */
 public class DaprConsumerProperties {
 
 	private String pubsubName;
