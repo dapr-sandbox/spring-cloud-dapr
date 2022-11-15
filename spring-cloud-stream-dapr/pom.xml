@@ -20,8 +20,7 @@
 	</properties>
 	<modules>
 		<module>spring-cloud-starter-stream-dapr</module>
-		<module>spring-cloud-stream-binder-dapr-grpc</module>
-		<module>spring-cloud-stream-binder-dapr-common</module>
+		<module>spring-cloud-stream-binder-dapr</module>
 		<module>samples</module>
 	</modules>
 	<dependencyManagement>
@@ -43,7 +42,7 @@
 			</dependency>
 			<dependency>
 				<groupId>io.dapr.spring</groupId>
-				<artifactId>spring-cloud-stream-binder-dapr-grpc</artifactId>
+				<artifactId>spring-cloud-stream-binder-dapr</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

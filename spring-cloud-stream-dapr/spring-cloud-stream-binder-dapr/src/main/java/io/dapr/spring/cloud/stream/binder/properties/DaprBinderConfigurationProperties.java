@@ -33,14 +33,6 @@ public class DaprBinderConfigurationProperties extends Properties {
 		System.getProperties().setProperty(SIDECAR_IP.getName(), address);
 	}
 
-	public int getHttpPort() {
-		return HTTP_PORT.get();
-	}
-
-	public void setHttpPort(int httpPort) {
-		System.getProperties().setProperty(HTTP_PORT.getName(), String.valueOf(httpPort));
-	}
-
 	public int getGrpcPort() {
 		return GRPC_PORT.get();
 	}
@@ -54,13 +46,6 @@ public class DaprBinderConfigurationProperties extends Properties {
 		System.getProperties().setProperty(
 				Properties.API_METHOD_INVOCATION_PROTOCOL.getName(),
 				DaprApiProtocol.GRPC.name());
-	}
-
-	public void switchToHTTP() {
-		System.getProperties().setProperty(Properties.API_PROTOCOL.getName(), DaprApiProtocol.HTTP.name());
-		System.getProperties().setProperty(
-				Properties.API_METHOD_INVOCATION_PROTOCOL.getName(),
-				DaprApiProtocol.HTTP.name());
 	}
 
 }

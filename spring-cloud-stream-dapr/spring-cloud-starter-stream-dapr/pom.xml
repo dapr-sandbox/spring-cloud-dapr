@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>io.dapr.spring</groupId>
-			<artifactId>spring-cloud-stream-binder-dapr-grpc</artifactId>
+			<artifactId>spring-cloud-stream-binder-dapr</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
