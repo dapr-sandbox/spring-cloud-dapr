@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.dapr.client.domain.PublishEventRequest;
+import io.dapr.serializer.DaprObjectSerializer;
+import io.dapr.utils.TypeRef;
 import io.dapr.v1.DaprAppCallbackProtos;
 
 /**
@@ -31,10 +31,10 @@ public class DaprMessageConverter
 
 	private static Logger logger = LoggerFactory.getLogger(DaprMessageConverter.class);
 
-	private final ObjectMapper objectMapper;
+	private final DaprObjectSerializer objectSerializer;
 
-	public DaprMessageConverter() {
-		objectMapper = new ObjectMapper();
+	public DaprMessageConverter(DaprObjectSerializer objectSerializer) {
+		this.objectSerializer = objectSerializer;
 	}
 
 	@Override
@@ -46,11 +46,10 @@ public class DaprMessageConverter
 	public Message<?> toMessage(DaprAppCallbackProtos.TopicEventRequest topicEventRequest) {
 		DaprMessage daprMessage = new DaprMessage();
 		try {
-			daprMessage = objectMapper.readValue(new String(topicEventRequest.getData().toByteArray()),
-					DaprMessage.class);
+			daprMessage = objectSerializer.deserialize(topicEventRequest.getData().toByteArray(),
+					new TypeRef<DaprMessage>() {
+					});
 		} catch (Exception e) {
-			// throw new ConversionException("Failed to convert json string to Dapr
-			// message:" + e);
 			logger.error("Fail to convert Message, forward directly");
 			return MessageBuilder.withPayload(topicEventRequest.getData().toByteArray()).build();
 		}

@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
+import io.dapr.serializer.DaprObjectSerializer;
+import io.dapr.serializer.DefaultObjectSerializer;
 import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
 import io.dapr.spring.cloud.stream.binder.DaprMessageChannelBinder;
 import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
@@ -42,10 +44,20 @@ public class DaprBinderConfiguration {
 		return new DaprBinderProvisioner();
 	}
 
+	/**
+	 * Implement different DaprObjectSerializer interfaces to support multiple ways to serialize
+	 * Currently using DaprObjectSerializer temporarily
+	 */
 	@Bean
 	@ConditionalOnMissingBean
-	public DaprMessageConverter daprMessageConverter() {
-		return new DaprMessageConverter();
+	public DaprObjectSerializer daprObjectSerializer() {
+		return new DefaultObjectSerializer();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public DaprMessageConverter daprMessageConverter(DaprObjectSerializer daprObjectSerializer) {
+		return new DaprMessageConverter(daprObjectSerializer);
 	}
 
 	@Bean
@@ -67,7 +79,7 @@ public class DaprBinderConfiguration {
 
 		// switch procotol to GRPC
 		properties.switchToGRPC();
-				
+
 		// build grpc client
 		DaprClient client = new DaprClientBuilder()
 				.build();

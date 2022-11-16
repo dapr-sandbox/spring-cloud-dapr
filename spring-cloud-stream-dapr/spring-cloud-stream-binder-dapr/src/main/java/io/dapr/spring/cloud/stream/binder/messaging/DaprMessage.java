@@ -13,7 +13,6 @@
 
 package io.dapr.spring.cloud.stream.binder.messaging;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.springframework.messaging.Message;
@@ -21,7 +20,7 @@ import org.springframework.messaging.Message;
 /**
  * Encapsulates {@link Message} payload and headers for serialization.
  */
-public class DaprMessage implements Serializable {
+public class DaprMessage {
 
 	byte[] payload;
 

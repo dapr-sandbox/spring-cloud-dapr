@@ -14,9 +14,6 @@
 package io.dapr.spring.cloud.stream.binder.messaging;
 
 import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 
@@ -38,7 +35,7 @@ public interface DaprConverter<I, O> {
 	 *         perform the conversion.
 	 */
 	@Nullable
-	I fromMessage(Message<?> message, String pubsubName, String topic) throws JsonProcessingException;
+	I fromMessage(Message<?> message, String pubsubName, String topic);
 
 	/**
 	 * Create a {@link Message} whose payload is the result of converting the given
