@@ -4,10 +4,10 @@
 
 Before running this demo, please ensure that you have the following software installed:
 
-- jdk 8
-- maven 3.8.*
-- docker / docker-compose
-- dapr cli
+- [jdk 8](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html) 
+- [maven 3.8.*](https://maven.apache.org/download.cgi)
+- [docker](https://docs.docker.com/get-docker/) / [docker-compose](https://github.com/docker/compose)
+- [dapr cli](https://docs.dapr.io/getting-started/install-dapr-cli/)
 
 ### dapr install
 
