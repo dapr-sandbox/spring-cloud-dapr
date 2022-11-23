@@ -24,7 +24,7 @@ import io.dapr.utils.TypeRef;
 import io.dapr.v1.DaprAppCallbackProtos;
 
 /**
- * Implement of DaprConverter.@see {@link DaprConverter}.
+ * Implementation of DaprConverter.@see {@link DaprConverter}.
  */
 public class DaprMessageConverter
 		implements DaprConverter<PublishEventRequest, DaprAppCallbackProtos.TopicEventRequest> {
