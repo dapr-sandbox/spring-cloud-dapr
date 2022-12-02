@@ -43,18 +43,16 @@ public class DaprBinderConfigurationTest {
 				.run(context -> {
 					try {
 						context.getBean(DaprBinderConfiguration.class);
+						// must throw an NoSuchBean exception
+						Assert.fail();
 					} catch (NoSuchBeanDefinitionException e) {
-						Assert.assertTrue(true);
-					} catch (Exception e) {
-						Assert.assertTrue(false);
 					}
 
 					try {
 						Assert.assertNull(context.getBean(DaprMessageChannelBinder.class));
+						// must throw an NoSuchBean exception
+						Assert.fail();
 					} catch (NoSuchBeanDefinitionException e) {
-						Assert.assertTrue(true);
-					} catch (Exception e) {
-						Assert.assertTrue(false);
 					}
 				});
 	}
@@ -84,7 +82,7 @@ public class DaprBinderConfigurationTest {
 					DaprMessageChannelBinder binder = context.getBean(DaprMessageChannelBinder.class);
 					DaprProducerProperties producerProperties = binder.getExtendedProducerProperties("input");
 					DaprConsumerProperties consumerProperties = binder.getExtendedConsumerProperties("output");
-					
+
 					Assert.assertEquals(producerProperties.getPubsubName(), "producer-fake-pubsub-name");
 					Assert.assertEquals(consumerProperties.getPubsubName(), "consumer-fake-pubsub-name");
 				});
