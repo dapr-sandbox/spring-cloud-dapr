@@ -13,18 +13,17 @@
 
 package io.dapr.spring.cloud.stream.binder.properties;
 
-import org.junit.Test;
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.dapr.client.DaprApiProtocol;
-
-import org.junit.Assert;
-import org.junit.Before;
 
 public class DaprBinderConfigurationPropertiesTest {
 
 	private DaprBinderConfigurationProperties binderProperties;
 
-	@Before
+	@BeforeEach
 	public void beforeEach() {
 		binderProperties = new DaprBinderConfigurationProperties();
 	}

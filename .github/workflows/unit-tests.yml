@@ -20,8 +20,10 @@ jobs:
         with:
           distribution: "adopt"
           java-version: ${{ env.JDK_VER }}
+      - name: Install dependencies
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: Unit tests
-        run: mvn test -q
+        run: mvn test -B
       - name: Codecov
         uses: codecov/codecov-action@v3.1.0
       - name: Upload test report
