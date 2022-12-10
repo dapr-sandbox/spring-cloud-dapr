@@ -27,9 +27,7 @@ import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
 import io.dapr.spring.cloud.stream.binder.DaprMessageChannelBinder;
 import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.spring.cloud.stream.binder.properties.DaprBinderConfigurationProperties;
-import io.dapr.spring.cloud.stream.binder.properties.DaprConsumerProperties;
 import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperties;
-import io.dapr.spring.cloud.stream.binder.properties.DaprProducerProperties;
 import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
 
 public class DaprBinderConfigurationTest {
@@ -71,20 +69,4 @@ public class DaprBinderConfigurationTest {
 				});
 	}
 
-	@Test
-	public void testExtendedBindingProperties() {
-		this.contextRunner.withBean(DaprGrpcService.class, () -> mock(DaprGrpcService.class))
-				.withPropertyValues(
-						"spring.cloud.stream.dapr.bindings.input.producer.pubsub-name=producer-fake-pubsub-name",
-						"spring.cloud.stream.dapr.bindings.output.consumer.pubsub-name=consumer-fake-pubsub-name")
-				.run(context -> {
-					Assert.assertNotNull(context.getBean(DaprMessageChannelBinder.class));
-					DaprMessageChannelBinder binder = context.getBean(DaprMessageChannelBinder.class);
-					DaprProducerProperties producerProperties = binder.getExtendedProducerProperties("input");
-					DaprConsumerProperties consumerProperties = binder.getExtendedConsumerProperties("output");
-
-					Assert.assertEquals(producerProperties.getPubsubName(), "producer-fake-pubsub-name");
-					Assert.assertEquals(consumerProperties.getPubsubName(), "consumer-fake-pubsub-name");
-				});
-	}
 }
