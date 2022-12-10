@@ -1,4 +1,4 @@
-package io.dapr.spring.cloud.stream.binder.provision;
+package io.dapr.spring.cloud.stream.binder;
 
 import static org.mockito.Mockito.mock;
 
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
-import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
-import io.dapr.spring.cloud.stream.binder.DaprMessageChannelBinder;
 import io.dapr.spring.cloud.stream.binder.config.DaprBinderConfiguration;
 import io.dapr.spring.cloud.stream.binder.properties.DaprConsumerProperties;
 import io.dapr.spring.cloud.stream.binder.properties.DaprProducerProperties;
