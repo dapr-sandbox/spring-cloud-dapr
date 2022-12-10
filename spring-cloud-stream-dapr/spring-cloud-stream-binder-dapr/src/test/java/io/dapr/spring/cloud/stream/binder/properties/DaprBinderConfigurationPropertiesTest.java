@@ -30,19 +30,23 @@ public class DaprBinderConfigurationPropertiesTest {
 
 	@Test
 	public void testGetAddress() {
-		Assert.assertEquals(binderProperties.getAddress(),"127.0.0.1");
+		Assert.assertEquals(binderProperties.getAddress(), "127.0.0.1");
+		binderProperties.setAddress("127.0.0.5");
+		Assert.assertEquals(binderProperties.getAddress(), "127.0.0.5");
 	}
 
 	@Test
 	public void testGetGrpcPort() {
-		Assert.assertEquals(binderProperties.getGrpcPort(),50001);
+		Assert.assertEquals(binderProperties.getGrpcPort(), 50001);
+		binderProperties.setGrpcPort(5937);
+		Assert.assertEquals(binderProperties.getGrpcPort(), 5937);
 	}
 
 	@Test
 	public void testSwitchToGRPC() {
 		binderProperties.switchToGRPC();
-		
-		Assert.assertEquals(binderProperties.getApiProtecol(),DaprApiProtocol.GRPC);
-		Assert.assertEquals(binderProperties.getApiMethodInvocationProtecol(),DaprApiProtocol.GRPC);
+
+		Assert.assertEquals(binderProperties.getApiProtecol(), DaprApiProtocol.GRPC);
+		Assert.assertEquals(binderProperties.getApiMethodInvocationProtecol(), DaprApiProtocol.GRPC);
 	}
 }
