@@ -10,7 +10,6 @@
 		<groupId>io.dapr.spring</groupId>
 		<artifactId>spring-cloud-dapr-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath />
 	</parent>
 
 	<properties>
