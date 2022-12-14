@@ -48,4 +48,11 @@ public class DaprBinderConfigurationProperties extends Properties {
 				DaprApiProtocol.GRPC.name());
 	}
 
+	public DaprApiProtocol getApiProtecol() {
+		return API_PROTOCOL.get();
+	}
+
+	public DaprApiProtocol getApiMethodInvocationProtecol() {
+		return API_METHOD_INVOCATION_PROTOCOL.get();
+	}
 }
