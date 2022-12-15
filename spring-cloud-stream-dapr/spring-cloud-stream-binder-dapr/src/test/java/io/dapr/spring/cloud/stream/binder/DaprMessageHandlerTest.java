@@ -13,10 +13,12 @@
 
 package io.dapr.spring.cloud.stream.binder;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,7 @@ import io.dapr.client.domain.PublishEventRequest;
 import io.dapr.serializer.DaprObjectSerializer;
 import io.dapr.serializer.DefaultObjectSerializer;
 import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
+import reactor.core.publisher.Mono;
 
 public class DaprMessageHandlerTest {
 
@@ -55,15 +58,9 @@ public class DaprMessageHandlerTest {
 		DaprMessageHandler daprMessageHandler = new DaprMessageHandler(converter, topic, pubsubName,
 				daprClient);
 
-		try {
-			daprMessageHandler.handleMessage(message);
-		} catch (MessageHandlingException e) {
-			// without initialization and sidecar running the method block() will throw an
-			// error.
-			Assert.assertTrue(true);
-		} catch (Exception e) {
-			Assert.assertTrue(false);
-		}
+		when(daprClient.publishEvent(any())).thenReturn(Mono.empty());
+		daprMessageHandler.handleMessage(message);
+
 		verify(daprClient, times(1)).publishEvent(isA(PublishEventRequest.class));
 	}
 }
