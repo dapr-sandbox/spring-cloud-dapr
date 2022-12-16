@@ -13,16 +13,20 @@
 
 package io.dapr.spring.cloud.stream.binder;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
+import com.google.protobuf.Empty;
 
 import io.dapr.serializer.DaprObjectSerializer;
 import io.dapr.serializer.DefaultObjectSerializer;
@@ -30,9 +34,9 @@ import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.v1.DaprAppCallbackProtos;
 import io.dapr.v1.DaprAppCallbackProtos.TopicSubscription;
 import io.grpc.stub.StreamObserver;
-import com.google.protobuf.Empty;
 
 public class DaprGrpcServiceTest {
+
     private String pubsubName;
     private String topic;
     private DaprObjectSerializer objectSerializer;
@@ -51,32 +55,11 @@ public class DaprGrpcServiceTest {
     }
 
     /**
-     * The purpose of this test is to show if the response when GRPC event is called
-     * is reasonable.
-     * It can indicate subscribing message from Dapr sidecar is successful.
-     */
-    @Test
-    public void testOnTopicEvent() {
-        DaprAppCallbackProtos.TopicEventRequest request = DaprAppCallbackProtos.TopicEventRequest.newBuilder().build();
-        StreamObserver<DaprAppCallbackProtos.TopicEventResponse> responseObserver = mock(StreamObserver.class);
-        ArgumentCaptor<DaprAppCallbackProtos.TopicEventResponse> captor = ArgumentCaptor
-                .forClass(DaprAppCallbackProtos.TopicEventResponse.class);
-
-        daprGrpcServic.onTopicEvent(request, responseObserver);
-
-        verify(responseObserver, times(1)).onNext(captor.capture());
-        DaprAppCallbackProtos.TopicEventResponse response = captor.getValue();
-        Assert.assertEquals(response.getStatus(),
-                DaprAppCallbackProtos.TopicEventResponse.TopicEventResponseStatus.SUCCESS);
-        verify(responseObserver, times(1)).onCompleted();
-    }
-
-    /**
      * This test is to show if the subscription information can be sent successfully
      * via GRPC.
      */
     @Test
-    public void testListTopicSubscriptionst() {
+    public void testListTopicSubscriptionst_default() {
         Empty request = Empty.newBuilder().build();
         StreamObserver<DaprAppCallbackProtos.ListTopicSubscriptionsResponse> responseObserver = mock(
                 StreamObserver.class);
@@ -94,4 +77,55 @@ public class DaprGrpcServiceTest {
         Assert.assertEquals(list.get(0).getTopic(), "topic");
         verify(responseObserver, times(1)).onCompleted();
     }
+
+    @Test
+    public void testListTopicSubscriptionst_exception() {
+        Empty request = Empty.newBuilder().build();
+        StreamObserver<DaprAppCallbackProtos.ListTopicSubscriptionsResponse> responseObserver = mock(
+                StreamObserver.class);
+
+        doThrow(new RuntimeException()).when(responseObserver)
+                .onNext(any());
+
+        daprGrpcServic.listTopicSubscriptions(request, responseObserver);
+
+        verify(responseObserver, times(1)).onError(any());
+        verify(responseObserver, times(1)).onCompleted();
+    }
+
+    /**
+     * The purpose of this test is to show if the response when GRPC event is called
+     * is reasonable.
+     * It can indicate subscribing message from Dapr sidecar is successful.
+     */
+    @Test
+    public void testOnTopicEvent_default() {
+        DaprAppCallbackProtos.TopicEventRequest request = DaprAppCallbackProtos.TopicEventRequest.newBuilder()
+                .build();
+        StreamObserver<DaprAppCallbackProtos.TopicEventResponse> responseObserver = mock(StreamObserver.class);
+        ArgumentCaptor<DaprAppCallbackProtos.TopicEventResponse> captor = ArgumentCaptor
+                .forClass(DaprAppCallbackProtos.TopicEventResponse.class);
+
+        daprGrpcServic.onTopicEvent(request, responseObserver);
+
+        verify(responseObserver, times(1)).onNext(captor.capture());
+        DaprAppCallbackProtos.TopicEventResponse response = captor.getValue();
+        Assert.assertEquals(response.getStatus(),
+                DaprAppCallbackProtos.TopicEventResponse.TopicEventResponseStatus.SUCCESS);
+        verify(responseObserver, times(1)).onCompleted();
+    }
+
+    @Test
+    public void testOnTopicEvent_exception() {
+        DaprAppCallbackProtos.TopicEventRequest request = DaprAppCallbackProtos.TopicEventRequest.newBuilder()
+                .build();
+        StreamObserver<DaprAppCallbackProtos.TopicEventResponse> responseObserver = mock(StreamObserver.class);
+        doThrow(new RuntimeException()).when(responseObserver)
+                .onNext(any());
+
+        daprGrpcServic.onTopicEvent(request, responseObserver);
+
+        verify(responseObserver, times(1)).onError(any());
+    }
+
 }

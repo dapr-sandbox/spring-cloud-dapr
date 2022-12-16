@@ -15,6 +15,11 @@ package io.dapr.spring.cloud.stream.binder.messaging;
 
 import org.junit.Assert;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +72,21 @@ public class DaprMessageConverterTest {
         Assert.assertEquals(result.getHeaders().get("contentType"), "application/json");
         Assert.assertEquals(result.getHeaders().get("key"), "value");
         Assert.assertArrayEquals((byte[]) result.getPayload(), "fake payload".getBytes());
+    }
+
+    @Test
+    public void testToMessage_Exception() throws IOException {
+        String data = "{\"headers\":{\"contentType\":\"application/json\",\"key\":\"value\"},\"payload\":\"ZmFrZSBwYXlsb2Fk\"}";
+        TopicEventRequest request = TopicEventRequest.newBuilder().setData(ByteString.copyFrom(data.getBytes()))
+                .build();
+        DaprObjectSerializer objectSerializer = mock(DefaultObjectSerializer.class);
+        DaprMessageConverter converter = new DaprMessageConverter(objectSerializer);
+
+        when(objectSerializer.deserialize(any(),any())).thenThrow(new RuntimeException() );
+        Message<?> result = converter.toMessage(request);
+
+        //when deserialization fails, all data will be regarded as payload.
+        Assert.assertArrayEquals((byte[]) result.getPayload(), data.getBytes());
     }
 
 }
