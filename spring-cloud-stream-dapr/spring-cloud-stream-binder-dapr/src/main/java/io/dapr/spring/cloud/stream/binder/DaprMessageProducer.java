@@ -8,37 +8,44 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder;
 
-import org.springframework.integration.endpoint.MessageProducerSupport;
-import org.springframework.messaging.Message;
-
 import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.v1.DaprAppCallbackProtos;
+import org.springframework.integration.endpoint.MessageProducerSupport;
+import org.springframework.messaging.Message;
 
 /**
  * Class that deals with messages from TopicEvent in DaprGrpcService.
  */
 public class DaprMessageProducer extends MessageProducerSupport {
-	private final DaprGrpcService daprGrpcService;
-	private final DaprMessageConverter daprMessageConverter;
+  private final DaprGrpcService daprGrpcService;
+  private final DaprMessageConverter daprMessageConverter;
 
-	public DaprMessageProducer(DaprGrpcService daprGrpcService,
-			DaprMessageConverter daprMessageConverter,
-			String pubsubName,
-			String topic) {
-		this.daprMessageConverter = daprMessageConverter;
-		this.daprGrpcService = daprGrpcService;
-		this.daprGrpcService.registerConsumer(pubsubName, topic,
-				new DaprMessageConsumer(pubsubName, topic, this::onMessage));
-	}
+  /**
+   * Constructor of DaprMessageProducer.
+   * 
+   * @param daprGrpcService Class that encapsulates all client-side logic for Grpc.
+   * @param daprMessageConverter Implementation of DaprConverter.
+   * @param pubsubName the pubsub name.
+   * @param topic the topic.
+   */
+  public DaprMessageProducer(DaprGrpcService daprGrpcService,
+      DaprMessageConverter daprMessageConverter,
+      String pubsubName,
+      String topic) {
+    this.daprMessageConverter = daprMessageConverter;
+    this.daprGrpcService = daprGrpcService;
+    this.daprGrpcService.registerConsumer(pubsubName, topic,
+        new DaprMessageConsumer(pubsubName, topic, this::onMessage));
+  }
 
-	private void onMessage(DaprAppCallbackProtos.TopicEventRequest request) {
-		Message<?> message = daprMessageConverter.toMessage(request);
-		sendMessage(message);
-	}
+  private void onMessage(DaprAppCallbackProtos.TopicEventRequest request) {
+    Message<?> message = daprMessageConverter.toMessage(request);
+    sendMessage(message);
+  }
 
 }

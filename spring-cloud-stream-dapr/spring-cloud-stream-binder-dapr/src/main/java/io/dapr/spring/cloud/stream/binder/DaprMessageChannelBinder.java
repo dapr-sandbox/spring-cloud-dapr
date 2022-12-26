@@ -8,11 +8,17 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder;
 
+import io.dapr.client.DaprClient;
+import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
+import io.dapr.spring.cloud.stream.binder.properties.DaprConsumerProperties;
+import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperties;
+import io.dapr.spring.cloud.stream.binder.properties.DaprProducerProperties;
+import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
 import org.springframework.cloud.stream.binder.AbstractMessageChannelBinder;
 import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
 import org.springframework.cloud.stream.binder.ExtendedConsumerProperties;
@@ -24,77 +30,102 @@ import org.springframework.integration.core.MessageProducer;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
-import io.dapr.client.DaprClient;
-import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
-import io.dapr.spring.cloud.stream.binder.properties.DaprConsumerProperties;
-import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperties;
-import io.dapr.spring.cloud.stream.binder.properties.DaprProducerProperties;
-import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
-
 /**
  * A {@link io.dapr.spring.cloud.stream.binder} that uses Dapr sidecar as the
  * underlying middleware.
  */
 public class DaprMessageChannelBinder extends
-        AbstractMessageChannelBinder<ExtendedConsumerProperties<DaprConsumerProperties>, ExtendedProducerProperties<DaprProducerProperties>, DaprBinderProvisioner>
-        implements
-        ExtendedPropertiesBinder<MessageChannel, DaprConsumerProperties, DaprProducerProperties> {
+    AbstractMessageChannelBinder<ExtendedConsumerProperties<DaprConsumerProperties>, 
+    ExtendedProducerProperties<DaprProducerProperties>, DaprBinderProvisioner> implements
+    ExtendedPropertiesBinder<MessageChannel, DaprConsumerProperties, DaprProducerProperties> {
 
-    private final DaprExtendedBindingProperties bindingProperties;
-    private final DaprClient daprClient;
+  private final DaprExtendedBindingProperties bindingProperties;
+  private final DaprClient daprClient;
 
-    private final DaprGrpcService daprGrpcService;
-    private final DaprMessageConverter daprMessageConverter;
+  private final DaprGrpcService daprGrpcService;
+  private final DaprMessageConverter daprMessageConverter;
 
-    public DaprMessageChannelBinder(String[] headersToEmbed,
-            DaprBinderProvisioner provisioningProvider,
-            DaprExtendedBindingProperties bindingProperties,
-            DaprClient daprClient, DaprGrpcService daprGrpcService, DaprMessageConverter daprMessageConverter) {
-        super(headersToEmbed, provisioningProvider);
-        this.bindingProperties = bindingProperties;
-        this.daprClient = daprClient;
-        this.daprGrpcService = daprGrpcService;
-        this.daprMessageConverter = daprMessageConverter;
-    }
+  /**
+   * Construct a {@link DaprMessageChannelBinder} with the specified topic and
+   * pubsubName.
+   *
+   * @param headersToEmbed                Header for embedding.
+   * @param provisioningProvider         The provisioning of consumer and
+   *                                      producer destinations.
+   * @param bindingProperties The extended Dapr binding configuration
+   *                                      properties.
+   * @param daprClient                    Generic Client Adapter to be used.
+   * @param daprGrpcService               Class that encapsulates all client-side
+   *                                      logic for Grpc.
+   * @param daprMessageConverter          Implementation of DaprConverter.
+   */
+  public DaprMessageChannelBinder(String[] headersToEmbed,
+      DaprBinderProvisioner provisioningProvider,
+      DaprExtendedBindingProperties bindingProperties,
+      DaprClient daprClient, DaprGrpcService daprGrpcService, DaprMessageConverter daprMessageConverter) {
+    super(headersToEmbed, provisioningProvider);
+    this.bindingProperties = bindingProperties;
+    this.daprClient = daprClient;
+    this.daprGrpcService = daprGrpcService;
+    this.daprMessageConverter = daprMessageConverter;
+  }
 
-    @Override
-    public DaprConsumerProperties getExtendedConsumerProperties(String channelName) {
-        return this.bindingProperties.getExtendedConsumerProperties(channelName);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DaprConsumerProperties getExtendedConsumerProperties(String channelName) {
+    return this.bindingProperties.getExtendedConsumerProperties(channelName);
+  }
 
-    @Override
-    public DaprProducerProperties getExtendedProducerProperties(String channelName) {
-        return this.bindingProperties.getExtendedProducerProperties(channelName);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DaprProducerProperties getExtendedProducerProperties(String channelName) {
+    return this.bindingProperties.getExtendedProducerProperties(channelName);
+  }
 
-    @Override
-    public String getDefaultsPrefix() {
-        return this.bindingProperties.getDefaultsPrefix();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getDefaultsPrefix() {
+    return this.bindingProperties.getDefaultsPrefix();
+  }
 
-    @Override
-    public Class<? extends BinderSpecificPropertiesProvider> getExtendedPropertiesEntryClass() {
-        return this.bindingProperties.getExtendedPropertiesEntryClass();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Class<? extends BinderSpecificPropertiesProvider> getExtendedPropertiesEntryClass() {
+    return this.bindingProperties.getExtendedPropertiesEntryClass();
+  }
 
-    @Override
-    protected MessageHandler createProducerMessageHandler(ProducerDestination destination,
-            ExtendedProducerProperties<DaprProducerProperties> producerProperties,
-            MessageChannel errorChannel)
-            throws Exception {
-        DaprProducerProperties extension = producerProperties.getExtension();
-        DaprMessageHandler daprMessageHandler = new DaprMessageHandler(
-                daprMessageConverter, destination.getName(), extension.getPubsubName(), daprClient);
-        daprMessageHandler.setBeanFactory(getBeanFactory());
-        return daprMessageHandler;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected MessageHandler createProducerMessageHandler(ProducerDestination destination,
+      ExtendedProducerProperties<DaprProducerProperties> producerProperties,
+      MessageChannel errorChannel)
+      throws Exception {
+    DaprProducerProperties extension = producerProperties.getExtension();
+    DaprMessageHandler daprMessageHandler = new DaprMessageHandler(
+        daprMessageConverter, destination.getName(), extension.getPubsubName(), daprClient);
+    daprMessageHandler.setBeanFactory(getBeanFactory());
+    return daprMessageHandler;
+  }
 
-    @Override
-    protected MessageProducer createConsumerEndpoint(ConsumerDestination destination, String group,
-            ExtendedConsumerProperties<DaprConsumerProperties> properties) throws Exception {
-        return new DaprMessageProducer(daprGrpcService,
-                daprMessageConverter, properties.getExtension().getPubsubName(),
-                destination.getName());
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected MessageProducer createConsumerEndpoint(ConsumerDestination destination, String group,
+      ExtendedConsumerProperties<DaprConsumerProperties> properties) throws Exception {
+    return new DaprMessageProducer(daprGrpcService,
+        daprMessageConverter, properties.getExtension().getPubsubName(),
+        destination.getName());
+  }
 
 }

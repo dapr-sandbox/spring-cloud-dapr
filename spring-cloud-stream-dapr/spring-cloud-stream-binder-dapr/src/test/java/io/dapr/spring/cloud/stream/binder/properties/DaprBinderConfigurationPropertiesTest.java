@@ -8,45 +8,44 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.properties;
 
+import io.dapr.client.DaprApiProtocol;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.dapr.client.DaprApiProtocol;
-
 public class DaprBinderConfigurationPropertiesTest {
 
-	private DaprBinderConfigurationProperties binderProperties;
+  private DaprBinderConfigurationProperties binderProperties;
 
-	@BeforeEach
-	public void beforeEach() {
-		binderProperties = new DaprBinderConfigurationProperties();
-	}
+  @BeforeEach
+  public void beforeEach() {
+    binderProperties = new DaprBinderConfigurationProperties();
+  }
 
-	@Test
-	public void testGetAddress() {
-		Assert.assertEquals(binderProperties.getAddress(), "127.0.0.1");
-		binderProperties.setAddress("127.0.0.5");
-		Assert.assertEquals(binderProperties.getAddress(), "127.0.0.5");
-	}
+  @Test
+  public void testGetAddress() {
+    Assert.assertEquals(binderProperties.getAddress(), "127.0.0.1");
+    binderProperties.setAddress("127.0.0.5");
+    Assert.assertEquals(binderProperties.getAddress(), "127.0.0.5");
+  }
 
-	@Test
-	public void testGetGrpcPort() {
-		Assert.assertEquals(binderProperties.getGrpcPort(), 50001);
-		binderProperties.setGrpcPort(5937);
-		Assert.assertEquals(binderProperties.getGrpcPort(), 5937);
-	}
+  @Test
+  public void testGetGrpcPort() {
+    Assert.assertEquals(binderProperties.getGrpcPort(), 50001);
+    binderProperties.setGrpcPort(5937);
+    Assert.assertEquals(binderProperties.getGrpcPort(), 5937);
+  }
 
-	@Test
-	public void testSwitchToGRPC() {
-		binderProperties.switchToGRPC();
+  @Test
+  public void testSwitchToGrpc() {
+    binderProperties.switchToGrpc();
 
-		Assert.assertEquals(binderProperties.getApiProtecol(), DaprApiProtocol.GRPC);
-		Assert.assertEquals(binderProperties.getApiMethodInvocationProtecol(), DaprApiProtocol.GRPC);
-	}
+    Assert.assertEquals(binderProperties.getApiProtecol(), DaprApiProtocol.GRPC);
+    Assert.assertEquals(binderProperties.getApiMethodInvocationProtecol(), DaprApiProtocol.GRPC);
+  }
 }

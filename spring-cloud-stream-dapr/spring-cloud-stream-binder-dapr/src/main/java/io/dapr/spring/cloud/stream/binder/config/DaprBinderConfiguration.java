@@ -8,16 +8,10 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.config;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.stream.binder.Binder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
@@ -29,6 +23,11 @@ import io.dapr.spring.cloud.stream.binder.messaging.DaprMessageConverter;
 import io.dapr.spring.cloud.stream.binder.properties.DaprBinderConfigurationProperties;
 import io.dapr.spring.cloud.stream.binder.properties.DaprExtendedBindingProperties;
 import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.stream.binder.Binder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Dapr binder's Spring Boot AutoConfiguration.
@@ -38,51 +37,73 @@ import io.dapr.spring.cloud.stream.binder.provisioning.DaprBinderProvisioner;
 @EnableConfigurationProperties({ DaprBinderConfigurationProperties.class, DaprExtendedBindingProperties.class })
 public class DaprBinderConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprBinderProvisioner daprBinderProvisioner() {
-		return new DaprBinderProvisioner();
-	}
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprBinderProvisioner daprBinderProvisioner() {
+    return new DaprBinderProvisioner();
+  }
 
-	/**
-	 * Implement different DaprObjectSerializer interfaces to support multiple ways to serialize
-	 * Currently using DaprObjectSerializer temporarily
-	 */
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprObjectSerializer daprObjectSerializer() {
-		return new DefaultObjectSerializer();
-	}
+  /**
+   * Implement different DaprObjectSerializer interfaces to support multiple ways
+   * to serialize. Using DaprObjectSerializer temporarily.
+   * 
+   * @return Instance of DaprObjectSerializer
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprObjectSerializer daprObjectSerializer() {
+    return new DefaultObjectSerializer();
+  }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprMessageConverter daprMessageConverter(DaprObjectSerializer daprObjectSerializer) {
-		return new DaprMessageConverter(daprObjectSerializer);
-	}
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprMessageConverter daprMessageConverter(DaprObjectSerializer daprObjectSerializer) {
+    return new DaprMessageConverter(daprObjectSerializer);
+  }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprMessageChannelBinder daprMessageChannelBinder(DaprBinderProvisioner daprBinderProvisioner,
-			DaprExtendedBindingProperties daprExtendedBindingProperties, DaprClient daprClient,
-			DaprGrpcService daprGrpcService,
-			DaprMessageConverter daprMessageConverter) {
-		return new DaprMessageChannelBinder(
-				null,
-				daprBinderProvisioner,
-				daprExtendedBindingProperties,
-				daprClient, daprGrpcService, daprMessageConverter);
-	}
+  /**
+   * Create an instance of this binder.
+   *
+   * @param daprBinderProvisioner         The provisioning of consumer and
+   *                                      producer destinations.
+   * @param daprExtendedBindingProperties The extended Dapr binding configuration
+   *                                      properties.
+   * @param daprClient                    Generic Client Adapter to be used.
+   * @param daprGrpcService               Class that encapsulates all client-side
+   *                                      logic for Grpc.
+   * @param daprMessageConverter          Implementation of DaprConverter.
+   * 
+   * @return Instance of DaprMessageChannelBinder.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprMessageChannelBinder daprMessageChannelBinder(DaprBinderProvisioner daprBinderProvisioner,
+      DaprExtendedBindingProperties daprExtendedBindingProperties, DaprClient daprClient,
+      DaprGrpcService daprGrpcService,
+      DaprMessageConverter daprMessageConverter) {
+    return new DaprMessageChannelBinder(
+        null,
+        daprBinderProvisioner,
+        daprExtendedBindingProperties,
+        daprClient, daprGrpcService, daprMessageConverter);
+  }
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprClient daprClient(DaprBinderConfigurationProperties properties) {
+  /**
+   * Create an instance of DaprClient.
+   *
+   * @param properties Configuration properties for the Dapr binder.
+   * 
+   * @return Instance of DaprClient.
+   */
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprClient daprClient(DaprBinderConfigurationProperties properties) {
 
-		// switch procotol to GRPC
-		properties.switchToGRPC();
+    // switch procotol to Grpc
+    properties.switchToGrpc();
 
-		// build grpc client
-		DaprClient client = new DaprClientBuilder()
-				.build();
-		return client;
-	}
+    DaprClient client = new DaprClientBuilder()
+        .build();
+    return client;
+  }
 }

@@ -8,8 +8,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.properties;
 
@@ -21,29 +21,29 @@ import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
  */
 public class DaprBindingProperties implements BinderSpecificPropertiesProvider {
 
-	/**
-	 * Consumer specific binding properties. @see {@link DaprConsumerProperties}.
-	 */
-	private DaprConsumerProperties consumer = new DaprConsumerProperties();
+  /**
+   * Consumer specific binding properties. @see {@link DaprConsumerProperties}.
+   */
+  private DaprConsumerProperties consumer = new DaprConsumerProperties();
 
-	/**
-	 * Producer specific binding properties. @see {@link DaprProducerProperties}.
-	 */
-	private DaprProducerProperties producer = new DaprProducerProperties();
+  /**
+   * Producer specific binding properties. @see {@link DaprProducerProperties}.
+   */
+  private DaprProducerProperties producer = new DaprProducerProperties();
 
-	public DaprConsumerProperties getConsumer() {
-		return consumer;
-	}
+  public DaprConsumerProperties getConsumer() {
+    return consumer;
+  }
 
-	public void setConsumer(DaprConsumerProperties consumer) {
-		this.consumer = consumer;
-	}
+  public void setConsumer(DaprConsumerProperties consumer) {
+    this.consumer = consumer;
+  }
 
-	public DaprProducerProperties getProducer() {
-		return producer;
-	}
+  public DaprProducerProperties getProducer() {
+    return producer;
+  }
 
-	public void setProducer(DaprProducerProperties producer) {
-		this.producer = producer;
-	}
+  public void setProducer(DaprProducerProperties producer) {
+    this.producer = producer;
+  }
 }
