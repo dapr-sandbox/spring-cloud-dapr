@@ -8,8 +8,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.properties;
 
@@ -18,13 +18,13 @@ package io.dapr.spring.cloud.stream.binder.properties;
  */
 public class DaprConsumerProperties {
 
-	private String pubsubName;
+  private String pubsubName;
 
-	public String getPubsubName() {
-		return pubsubName;
-	}
+  public String getPubsubName() {
+    return pubsubName;
+  }
 
-	public void setPubsubName(String pubsubName) {
-		this.pubsubName = pubsubName;
-	}
+  public void setPubsubName(String pubsubName) {
+    this.pubsubName = pubsubName;
+  }
 }

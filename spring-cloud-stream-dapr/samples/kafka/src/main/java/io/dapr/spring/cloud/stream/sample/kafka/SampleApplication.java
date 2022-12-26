@@ -8,8 +8,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.sample.kafka;
 
@@ -31,34 +31,34 @@ import org.springframework.messaging.Message;
  */
 @SpringBootApplication
 public class SampleApplication {
-	private static Logger logger = LoggerFactory.getLogger(SampleApplication.class);
+  private static Logger logger = LoggerFactory.getLogger(SampleApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(SampleApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(SampleApplication.class, args);
+  }
 
-	private int i = 0;
+  private int i = 0;
 
-	/**
-	 * Generate messages for publish. 
-	 * @return A method returning Message<T> to publish.
-	 */
-	@Bean
-	public Supplier<Message<String>> supply() {
-		return () -> {
-			logger.info("Sending message, sequence " + i++);
-			return MessageBuilder.withPayload("event body").build();
-		};
-	}
+  /**
+   * Generate messages for publish. 
+   * @return A method returning Message<T> to publish.
+   */
+  @Bean
+  public Supplier<Message<String>> supply() {
+    return () -> {
+      logger.info("Sending message, sequence " + i++);
+      return MessageBuilder.withPayload("event body").build();
+    };
+  }
 
-	/**
-	 * Method to deal with suscribed messages.
-	 */
-	@Bean
-	public Consumer<Message<String>> consume() {
-		return message -> {
-			logger.info("Message received : {}", message);
-		};
-	}
+  /**
+   * Method to deal with suscribed messages.
+   */
+  @Bean
+  public Consumer<Message<String>> consume() {
+    return message -> {
+      logger.info("Message received : {}", message);
+    };
+  }
 
 }

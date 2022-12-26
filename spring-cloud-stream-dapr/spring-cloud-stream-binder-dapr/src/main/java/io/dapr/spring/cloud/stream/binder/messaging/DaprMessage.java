@@ -8,45 +8,45 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.messaging;
 
-import java.util.Map;
-
 import org.springframework.messaging.Message;
+
+import java.util.Map;
 
 /**
  * Encapsulates {@link Message} payload and headers for serialization.
  */
 public class DaprMessage {
 
-	byte[] payload;
+  byte[] payload;
 
-	Map<String, Object> headers;
+  Map<String, Object> headers;
 
-	DaprMessage() {
-	}
+  DaprMessage() {
+  }
 
-	public DaprMessage(byte[] payload, Map<String, Object> headers) {
-		this.payload = payload;
-		this.headers = headers;
-	}
+  public DaprMessage(byte[] payload, Map<String, Object> headers) {
+    this.payload = payload;
+    this.headers = headers;
+  }
 
-	public byte[] getPayload() {
-		return payload;
-	}
+  public byte[] getPayload() {
+    return payload;
+  }
 
-	public void setPayload(byte[] payload) {
-		this.payload = payload;
-	}
+  public void setPayload(byte[] payload) {
+    this.payload = payload;
+  }
 
-	public Map<String, Object> getHeaders() {
-		return headers;
-	}
+  public Map<String, Object> getHeaders() {
+    return headers;
+  }
 
-	public void setHeaders(Map<String, Object> headers) {
-		this.headers = headers;
-	}
+  public void setHeaders(Map<String, Object> headers) {
+    this.headers = headers;
+  }
 }

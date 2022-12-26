@@ -8,34 +8,56 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder;
 
-import java.util.function.Consumer;
+import io.dapr.v1.DaprAppCallbackProtos.TopicEventRequest;
 
-import io.dapr.v1.DaprAppCallbackProtos;
+import java.util.function.Consumer;
 
 /**
  * Class that deals with messages in the way of Consumer method in main application. 
  */
-public class DaprMessageConsumer implements Consumer<DaprAppCallbackProtos.TopicEventRequest> {
-	private final String topic;
-	private final String pubsubName;
-	private Consumer<DaprAppCallbackProtos.TopicEventRequest> integrationConsumer;
+public class DaprMessageConsumer implements Consumer<TopicEventRequest> {
 
-	public DaprMessageConsumer(String pubsubName, String topic,
-			Consumer<DaprAppCallbackProtos.TopicEventRequest> integrationConsumer) {
-		this.pubsubName = pubsubName;
-		this.topic = topic;
-		this.integrationConsumer = integrationConsumer;
-	}
+  /**
+   * Topic name to pub/sub.
+   */
+  private final String topic;
 
-	@Override
-	public void accept(DaprAppCallbackProtos.TopicEventRequest request) {
-		if (this.topic.equals(request.getTopic()) && this.pubsubName.equals(request.getPubsubName())) {
-			integrationConsumer.accept(request);
-		}
-	}
+  /**
+   * Pubsub name to pub/sub.
+   */
+  private final String pubsubName;
+
+  /**
+   * Method to process messages.
+   */
+  private Consumer<TopicEventRequest> integrationConsumer;
+
+  /**
+   * Constructor for DaprMessageConsumer.
+   *
+   * @param pubsubName Pubsub name to pub/sub..
+   * @param topic Topic name to pub/sub.
+   * @param integrationConsumer Method to process messages.
+   */
+  public DaprMessageConsumer(String pubsubName, String topic,
+      Consumer<TopicEventRequest> integrationConsumer) {
+    this.pubsubName = pubsubName;
+    this.topic = topic;
+    this.integrationConsumer = integrationConsumer;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(TopicEventRequest request) {
+    if (this.topic.equals(request.getTopic()) && this.pubsubName.equals(request.getPubsubName())) {
+      integrationConsumer.accept(request);
+    }
+  }
 }

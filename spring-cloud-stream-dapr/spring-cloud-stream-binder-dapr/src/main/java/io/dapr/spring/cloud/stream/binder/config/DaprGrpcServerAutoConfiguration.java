@@ -8,15 +8,15 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+limitations under the License.
+*/
 
 package io.dapr.spring.cloud.stream.binder.config;
 
-import org.springframework.context.annotation.Configuration;
+import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Dapr binder's Spring Boot AutoConfiguration.
@@ -24,9 +24,9 @@ import io.dapr.spring.cloud.stream.binder.DaprGrpcService;
 @Configuration(proxyBeanMethods = false)
 public class DaprGrpcServerAutoConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean
-	public DaprGrpcService daprGrpcService() {
-		return new DaprGrpcService();
-	}
+  @Bean
+  @ConditionalOnMissingBean
+  public DaprGrpcService daprGrpcService() {
+    return new DaprGrpcService();
+  }
 }
